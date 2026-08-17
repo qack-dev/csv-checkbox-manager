@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>チェックボックス状態管理システム</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- ヘッダーエリア -->
+        <header class="app-header">
+            <h1 class="app-title">進捗・チェック管理テーブル</h1>
+            <p class="app-description">CSVデータに基づいた進捗状況の共有・一括保存を行えます。</p>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="app-main">
+            <!-- テーブル表示エリア（レスポンシブ横スクロール対応） -->
+            <div class="table-container" id="table-container">
+                <div class="loading-spinner" id="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>データを読み込み中...</p>
+                </div>
+                <table class="checkbox-table" id="data-table" style="display: none;">
+                    <thead id="table-head">
+                        <!-- JavaScriptで動的生成 -->
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- JavaScriptで動的生成 -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- アクションエリア（下部中央配置） -->
+            <div class="action-container">
+                <button type="button" class="btn-save" id="btn-save">
+                    <span class="btn-text">状態を保存</span>
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- 通知メッセージ（トースト表示エリア） -->
+    <div class="toast-container" id="toast-container" aria-live="polite"></div>
+</body>
+</html>

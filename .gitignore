@@ -1,0 +1,15 @@
+# 実データおよび保存データ
+states.json
+public/data.csv
+
+# Javaコンパイル生成物
+*.class
+server/*.class
+
+# OS / エディタ一時ファイル
+.DS_Store
+Thumbs.db
+*~
+*.swp
+.idea/
+.vscode/
