@@ -8,29 +8,20 @@ Debian環境の自宅サーバーでの運用を想定し、**Java標準ライ�
 
 ## システムアーキテクチャ
 
-```text
-[ インターネット / 外部端末 ]
-         │ (HTTPS / TLS 暗号化通信)
-         ▼
-┌────────────────────────────────────────────────────────┐
-│ Tailscale Funnel (セキュアな外部公開トンネル)          │
-└────────────────────────┬───────────────────────────────┘
-                         │ (ローカル転送 :80 または :443)
-                         ▼
-┌────────────────────────────────────────────────────────┐
-│ Apache2 Web サーバー                                   │
-│  ├─ 静的ファイル配信 (/) ────> public/ (HTML/CSS/JS)   │
-│  │                              └─ data.csv            │
-│  │                                                     │
-│  └─ リバースプロキシ (/api/) ──> http://127.0.0.1:8080 │
-└────────────────────────┬───────────────────────────────┘
-                         │
-                         ▼
-┌────────────────────────────────────────────────────────┐
-│ Java REST API サーバー (CheckboxServer)                │
-│  ├─ GET /api/states  ───> states.json 読み込み         │
-│  └─ POST /api/states ───> states.json 書き込み (UTF-8) │
-└────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    client["インターネット / 外部端末"]
+    funnel["Tailscale Funnel<br>(HTTPS / TLS 暗号化通信)"]
+    apache["Apache2 Web サーバー<br>(:80 / :443)"]
+    static["public/<br>(HTML / CSS / JS / data.csv)"]
+    backend["Java REST API サーバー (:8088)<br>(CheckboxServer)"]
+    storage[("states.json<br>(状態永続化ファイル)")]
+
+    client -->|HTTPS 外部アクセス| funnel
+    funnel -->|ローカル転送| apache
+    apache -->|静的ファイル配信 /| static
+    apache -->|リバースプロキシ /api/| backend
+    backend -->|GET: 状態読み込み<br>POST: 状態書き込み| storage
 ```
 
 ---
@@ -160,7 +151,7 @@ sudo systemctl status checkbox-server
 
 ## Apache2 のリバースプロキシ & 静的配信設定
 
-Apache2でフロントエンド（`public/`）を静的配信し、`/api/` へのリクエストをJavaサーバー（`http://127.0.0.1:8080/api/`）へ転送します。
+Apache2でフロントエンド（`public/`）を静的配信し、`/api/` へのリクエストをJavaサーバー（`http://127.0.0.1:8088/api/`）へ転送します。
 
 ### 1. 必要なApacheモジュールの有効化
 
@@ -187,8 +178,8 @@ sudo a2enmod proxy proxy_http rewrite headers
     # APIリクエストをJavaバックエンドにリバースプロキシ
     ProxyRequests Off
     ProxyPreserveHost On
-    ProxyPass /api/ http://127.0.0.1:8080/api/
-    ProxyPassReverse /api/ http://127.0.0.1:8080/api/
+    ProxyPass /api/ http://127.0.0.1:8088/api/
+    ProxyPassReverse /api/ http://127.0.0.1:8088/api/
 
     # ログ設定
     ErrorLog ${APACHE_LOG_DIR}/checkbox_manager_error.log
@@ -255,7 +246,7 @@ Javaバックエンドのポート等を変更する場合は、`server/Checkbox
 ```java
 // server/CheckboxServer.java
 public static final String HOST = "127.0.0.1";
-public static final int PORT = 8080;
+public static final int PORT = 8088;
 ```
 
 ---

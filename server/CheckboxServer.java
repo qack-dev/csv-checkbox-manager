@@ -27,7 +27,7 @@ public class CheckboxServer {
 
     // サーバー設定用定数
     public static final String HOST = "127.0.0.1";
-    public static final int PORT = 8080;
+    public static final int PORT = 8088;
     public static final String API_PATH = "/api/states";
     public static final String STATES_FILE_PATH = "states.json";
 
