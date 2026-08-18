@@ -42,6 +42,7 @@ csv-checkbox-manager/
 ├── .gitignore
 ├── README.md
 ├── data.csv.example            # CSVサンプルデータ
+├── states.json                 # チェック状態の永続化ファイル（POST時に自動生成）
 ├── public/                     # Apache2で配信する静的公開ディレクトリ
 │   ├── index.html              # フロントエンドHTML
 │   ├── css/
@@ -50,8 +51,7 @@ csv-checkbox-manager/
 │   │   └── app.js              # フロントエンドロジック (定数・通信・描画)
 │   └── data.csv                # 実際のデータ（data.csv.exampleから作成）
 └── server/
-    ├── CheckboxServer.java     # Java標準HttpServerベースのREST API
-    └── states.json             # チェック状態の永続化ファイル（POST時に自動生成）
+    └── CheckboxServer.java     # Java標準HttpServerベースのREST API
 ```
 
 ---
