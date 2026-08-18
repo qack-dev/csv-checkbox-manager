@@ -151,7 +151,7 @@ sudo systemctl status checkbox-server
 
 ## Apache2 のリバースプロキシ & 静的配信設定
 
-Apache2でフロントエンド（`public/`）を静的配信し、`/api/` へのリクエストをJavaサーバー（`http://127.0.0.1:8088/api/`）へ転送します。
+Apache2でフロントエンド（`public/`）を配信し、`/api/` へのリクエストをJavaバックエンドサーバー（`http://127.0.0.1:8088/api/`）へ転送します。
 
 ### 1. 必要なApacheモジュールの有効化
 
@@ -159,41 +159,22 @@ Apache2でフロントエンド（`public/`）を静的配信し、`/api/` へ�
 sudo a2enmod proxy proxy_http rewrite headers
 ```
 
-### 2. VirtualHost の設定
+### 2. リバースプロキシ設定の追加
 
-`/etc/apache2/sites-available/checkbox-manager.conf` を作成します。
+既存のVirtualHost設定ファイル（例: `/etc/apache2/sites-available/000-default.conf`）内の `<VirtualHost *:80>` に以下のリバースプロキシ設定を追加します。
 
 ```apache
-<VirtualHost *:80>
-    ServerName localhost
-    # プロジェクトの public ディレクトリを指定
-    DocumentRoot /var/www/csv-checkbox-manager/public
-
-    <Directory /var/www/csv-checkbox-manager/public>
-        Options -Indexes +FollowSymLinks
-        AllowOverride None
-        Require all granted
-    </Directory>
-
     # APIリクエストをJavaバックエンドにリバースプロキシ
-    ProxyRequests Off
     ProxyPreserveHost On
     ProxyPass /api/ http://127.0.0.1:8088/api/
     ProxyPassReverse /api/ http://127.0.0.1:8088/api/
-
-    # ログ設定
-    ErrorLog ${APACHE_LOG_DIR}/checkbox_manager_error.log
-    CustomLog ${APACHE_LOG_DIR}/checkbox_manager_access.log combined
-</VirtualHost>
 ```
 
-### 3. サイト設定の適用とApache2の再起動
+### 3. 設定の適用とApache2の再読み込み
 
 ```bash
-sudo a2dissite 000-default.conf
-sudo a2ensite checkbox-manager.conf
 sudo apache2ctl configtest
-sudo systemctl restart apache2
+sudo systemctl reload apache2
 ```
 
 ---
