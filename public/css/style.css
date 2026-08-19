@@ -130,6 +130,14 @@ body {
 }
 
 /* カラム別スタイリング */
+.col-number {
+    min-width: 48px;
+    width: 48px;
+    text-align: center !important;
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
 .col-period {
     min-width: 140px;
     color: var(--color-text-muted);

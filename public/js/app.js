@@ -193,6 +193,7 @@ function parseCsvLine(line) {
 function renderTable(rows, states) {
     // 1. ヘッダー生成
     let headerHtml = '<tr>';
+    headerHtml += '<th class="col-number">#</th>';
     headerHtml += '<th class="col-period">期間</th>';
     headerHtml += '<th class="col-title">タイトル</th>';
     headerHtml += '<th class="col-url">URL</th>';
@@ -206,6 +207,7 @@ function renderTable(rows, states) {
     let bodyHtml = '';
     rows.forEach((row, rowIndex) => {
         bodyHtml += '<tr>';
+        bodyHtml += `<td class="col-number">${rowIndex + 1}</td>`;
         bodyHtml += `<td class="col-period">${escapeHtml(row.period)}</td>`;
         bodyHtml += `<td class="col-title">${escapeHtml(row.title)}</td>`;
 
