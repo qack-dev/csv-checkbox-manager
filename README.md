@@ -71,10 +71,13 @@ sudo apt install -y openjdk-17-jdk apache2 git
 
 ### 2. リポジトリの配置
 
-任意のディレクトリ（例: `/var/www/csv-checkbox-manager` または `/mnt/ssd/html/csv-checkbox-manager`）に配置します。
+任意のディレクトリ（例: `/var/www/csv-checkbox-manager` または `/mnt/ssd/html/csv-checkbox-manager`）にリポジトリをクローンして移動します。
 
 ```bash
-# 作業ディレクトリの例
+# リポジトリのクローン
+git clone https://github.com/qack-dev/csv-checkbox-manager.git /var/www/csv-checkbox-manager
+
+# 作業ディレクトリへ移動
 cd /var/www/csv-checkbox-manager
 ```
 
